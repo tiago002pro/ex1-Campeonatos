@@ -1,0 +1,62 @@
+<!--<?xml version="1.0" encoding="UTF-8" standalone="ne"?>-->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="1" author="tiagobarbosa02@outlook.com">
+        <preConditions>
+            <not>
+                <tableExists tableName="time" />
+            </not>
+        </preConditions>
+        <createTable tableName="time">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="nome" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="tiagobarbosa02@outlook.com">
+        <preConditions>
+            <not>
+                <tableExists tableName="campeonato" />
+            </not>
+        </preConditions>
+        <createTable tableName="campeonato">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="nome" type="VARCHAR(50)" />
+            <column name="data_inicial" type="DATE" />
+            <column name="data_final" type="DATE" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="tiagobarbosa02@outlook.com">
+        <preConditions>
+            <not>
+                <tableExists tableName="ponto" />
+            </not>
+        </preConditions>
+        <createTable tableName="ponto">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+
+            <column name="id_time" type="BIGINT" >
+                <constraints foreignKeyName="fk_id_time_references_time" referencedTableName="time" referencedColumnNames="id" />
+            </column>
+
+            <column name="id_campeonato" type="BIGINT">
+                <constraints foreignKeyName="fk_id_campeonato_references_campeonato" referencedTableName="campeonato" referencedColumnNames="id" />
+            </column>
+
+            <column name="pontuacao" type="INTEGER" />
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
+

@@ -3,8 +3,12 @@ package com.example.demo.service;
 import com.example.demo.model.Campeonato;
 import com.example.demo.model.Ponto;
 import com.example.demo.model.Time;
+import com.example.demo.repository.CampeonatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.*;
 
@@ -12,37 +16,41 @@ import java.util.*;
 public class CampeonatoService {
 
     @Autowired
+        CampeonatoRepository repository;
+    @Autowired
         TimeService timeService;
 
-    List<Campeonato> campeonatos = new ArrayList<>();
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
     Random random = new Random();
 
-    public String criaCampeonato (Map<String, Object> json) {
+    public String criaCampeonato (Map<String, String> json) throws ParseException {
         Campeonato campeonato = new Campeonato();
 
-        campeonato.setNome((String) json.get("Campeonato"));
-        campeonato.setDataInicial((Date) json.get("Data-inicio"));
-        campeonato.setDataFinal((Date) (json.get("Data-fim")));
-        campeonato.setTabela(new ArrayList<Ponto>());
-        campeonatos.add(campeonato);
-
+        campeonato.setNome(json.get("Campeonato"));
+        campeonato.setDataInicial(format.parse(json.get("Data-inicio")));
+        campeonato.setDataFinal(format.parse(json.get("Data-fim")));
+        this.repository.save(campeonato);
         return "Campeonato criado com sucesso!";
     }
 
     public List<Campeonato> pegaCampeonatos () {
-        return campeonatos;
+        return this.repository.findAll();
     }
 
-    public String insereTimeNoCampeonato(Integer idCampeonato, Map<String, Integer> json) {
-        List<Ponto> insereTime = campeonatos.get(idCampeonato).getTabela();
-        Time time = timeService.times.get(json.get("idTime"));
+    public String insereTimeNoCampeonato(Long idCampeonato, Long idTIme, Map<String, Long> json) {
+        Campeonato campeonato = this.pegaCampeonato(idCampeonato);
+        Time time = this.timeService.pegaTime(idTIme);
         Ponto ponto = new Ponto();
 
         ponto.setTime(time);
         ponto.setPontuacao(new Random().nextInt(15));
-        insereTime.add(ponto);
-
+        campeonato.getTabela().add(ponto);
+        this.repository.save(campeonato);
         return "Time entrou no campeonato";
+    }
+
+    public Campeonato pegaCampeonato (Long idCampeonato) {
+        return this.repository.findById(idCampeonato).get();
     }
 
 //    public List<Ponto> getScore (Integer id) {

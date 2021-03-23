@@ -1,21 +1,24 @@
 package com.example.demo.model;
 
-public class Ponto implements Comparable<Ponto> {
-    private Time time;
-    private Integer pontuacao;
+import lombok.Getter;
+import lombok.Setter;
 
-    public void setTime(Time time) {
-        this.time = time;
-    }
-    public Time getTime() {
-        return time;
-    }
-    public void setPontuacao(Integer pontuacao) {
-        this.pontuacao = pontuacao;
-    }
-    public Integer getPontuacao() {
-        return pontuacao;
-    }
+import javax.persistence.*;
+
+@Entity
+@Setter
+@Getter
+public class Ponto implements Comparable<Ponto> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_time", referencedColumnName = "id")
+    private Time time;
+
+    @Column(name = "pontuacao")
+    private Integer pontuacao;
 
     @Override
     public int compareTo(Ponto ponto) {

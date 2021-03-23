@@ -1,36 +1,30 @@
 package com.example.demo.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Getter
+@Setter
 public class Campeonato {
-        private String nome;
-        private Date dataInicial;
-        private Date dataFinal;
-        private List<Ponto> tabela;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-        public String getNome() {
-                return nome;
-        }
-        public void setNome(String nome) {
-                this.nome = nome;
-        }
-        public Date getDataInicial() {
-                return dataInicial;
-        }
-        public void setDataInicial(Date dataInicial) {
-                this.dataInicial = dataInicial;
-        }
-        public Date getDataFinal() {
-                return dataFinal;
-        }
-        public void setDataFinal(Date dataFinal) {
-                this.dataFinal = dataFinal;
-        }
-        public List<Ponto> getTabela() {
-                return tabela;
-        }
-        public void setTabela(List<Ponto> tabela) {
-                this.tabela = tabela;
-        }
+        @Column(name = "nome")
+        private String nome;
+
+        @Column(name = "data_inicial")
+        private Date dataInicial;
+
+        @Column(name = "data_final")
+        private Date dataFinal;
+
+        @OneToMany(cascade = CascadeType.MERGE)
+        @JoinColumn(name = "id_campeonato", referencedColumnName = "id")
+        private List<Ponto> tabela;
 }

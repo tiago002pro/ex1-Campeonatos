@@ -2,10 +2,12 @@ package com.example.demo.api;
 
 import com.example.demo.model.Campeonato;
 import com.example.demo.model.Ponto;
+import com.example.demo.model.Time;
 import com.example.demo.service.CampeonatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +18,7 @@ public class CampeonatoController {
         private CampeonatoService service;
 
     @PostMapping("/campeonatos")
-    public String criaCampeonato(@RequestBody Map<String, Object> json) {
+    public String criaCampeonato(@RequestBody Map<String, String> json) throws ParseException {
         return this.service.criaCampeonato(json);
     }
 
@@ -25,9 +27,14 @@ public class CampeonatoController {
         return this.service.pegaCampeonatos();
     }
 
-    @PostMapping("/campeonato/{id}/insere-time")
-    public String insereTimeNoCampeonato(@PathVariable Integer id, @RequestBody Map<String, Integer> json) {
-        return this.service.insereTimeNoCampeonato(id, json);
+    @GetMapping("campeonato/{id}")
+    public Campeonato pegaTime(@PathVariable Long id) {
+        return this.service.pegaCampeonatos().get(Math.toIntExact(id));
+    }
+
+    @PostMapping("/campeonato/{id_campeonato}/insere-time/{id_time}")
+    public String insereTimeNoCampeonato(@PathVariable Long id_campeonato, @PathVariable Long id_time, @RequestBody Map<String, Long> json) {
+        return this.service.insereTimeNoCampeonato(id_campeonato, id_time, json);
     }
 
 //    @GetMapping("/insere/campeonato/{id}")

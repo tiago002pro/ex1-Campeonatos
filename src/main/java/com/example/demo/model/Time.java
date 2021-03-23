@@ -1,13 +1,19 @@
 package com.example.demo.model;
 
-public class Time {
-    private String nome;
+import lombok.Getter;
+import lombok.Setter;
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+import javax.persistence.*;
+
+@Entity
+@Getter
+@Setter
+public class Time {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome")
+    private String nome;
 
 }
